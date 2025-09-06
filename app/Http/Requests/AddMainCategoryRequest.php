@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class AddMainCategoryRequest extends FormRequest
 {
@@ -27,4 +29,10 @@ class AddMainCategoryRequest extends FormRequest
         'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:3000',
         ];
     }
+        protected function failedValidation(Validator $validator): void
+{
+    throw new HttpResponseException(
+        response()->json(['errors' => $validator->errors()], 422)
+    );
+}
 }

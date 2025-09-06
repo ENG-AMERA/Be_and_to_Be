@@ -6,7 +6,7 @@ use App\Repositories\OwnerRepository;
 
 class OneService{
     protected $ownerrepo;
- public function __construct(OwnerRepository $ownerrepo   )
+ public function __construct(OwnerRepository $ownerrepo )
     {
         $this->ownerrepo = $ownerrepo;
  }

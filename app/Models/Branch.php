@@ -29,5 +29,20 @@ class Branch extends Model
       public function maincategory(){
        return  $this->hasMany(MainCategory::class);
         }
+        public function coupon(){
+            return $this->hasMany(Coupon::class);
+        }
+        public function cart(){
+            return $this->hasMany(Cart::class);
+        }
+            public function deliveryorder(){
+        return $this->hasMany(DeliveryOrder::class);
+    }
+              public function tableorder(){
+        return $this->hasMany(TableOrder::class);
+    }
+              public function selforder(){
+        return $this->hasMany(SelfOrder::class);
+    }
 
 }

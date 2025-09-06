@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ClientController;
 
@@ -35,8 +36,13 @@ Route::group([
 
 
 Route::middleware(['auth:api', 'adminrole'])->group(function () {
-  //  Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
-
+   Route::post('/make_meal_unavailable/{id}', [AdminController::class, 'make_meal_unavailable']);//type id
+   Route::post('/deletecoupon/{id}', [AdminController::class, 'deletecoupon']);//coupon id
+   Route::post('/add_coupon', [AdminController::class, 'add_coupon']);
+   Route::post('/edit_expires_at', [AdminController::class, 'edit_expires_at']);
+   Route::post('/edit_value', [AdminController::class, 'edit_value']);
+   Route::post('/edit_min_order', [AdminController::class, 'edit_min_order']);
+   Route::get('/show_coupons', [AdminController::class, 'show_coupons']);
 });
 
 Route::middleware(['auth:api', 'ownerrole'])->group(function () {
@@ -53,10 +59,18 @@ Route::middleware(['auth:api', 'ownerrole'])->group(function () {
 
 
 Route::middleware(['auth:api', 'clientrole'])->group(function () {
-     Route::get('/getbranches', [ClientController::class, 'getbranches']);
-     Route::get('/getmaincategories/{id}', [ClientController::class, 'getmaincategories']);//branch_id
-     Route::get('/getmealsofcategory/{id}', [ClientController::class, 'getmealsofcategory']);//category_id
-     Route::get('/gettypesofmeal/{id}', [ClientController::class, 'gettypesofmeal']);//meal_id
-     Route::post('/addtocart', [ClientController::class, 'addtocart']);
+    Route::get('/getbranches', [ClientController::class, 'getbranches']);
+    Route::get('/getmaincategories/{id}', [ClientController::class, 'getmaincategories']);//branch_id
+    Route::get('/getmealsofcategory/{id}', [ClientController::class, 'getmealsofcategory']);//category_id
+    Route::get('/gettypesofmeal/{id}', [ClientController::class, 'gettypesofmeal']);//meal_id
+    Route::post('/addtocart', [ClientController::class, 'addtocart']);
+    Route::post('/addone_with_cart', [ClientController::class, 'addone_with_cart']);
+    Route::post('/minusone_with_cart', [ClientController::class, 'minusone_with_cart']);
+    Route::get('/minusone_without_cart', [ClientController::class, 'minusone_without_cart']);
+    Route::get('/addone_without_cart', [ClientController::class, 'addone_without_cart']);
+    Route::get('/show_coupons/{id}', [ClientController::class, 'show_coupons']);//branch id
+    Route::post('/confirm_delivery_order', [ClientController::class, 'confirm_delivery_order']);
+    Route::post('/confirm_table_order', [ClientController::class, 'confirm_table_order']);
+     Route::post('/confirm_self_order', [ClientController::class, 'confirm_self_order']);
 
 });

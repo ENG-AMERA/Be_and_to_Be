@@ -13,6 +13,7 @@ class Cart extends Model
         'user_id',
         'total_price',
         'item_number',
+        'branch_id',
     ];
 
     public function cartitems(){
@@ -21,6 +22,9 @@ class Cart extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+        public function branch(){
+        return $this->belongsTo(Branch::class);
     }
 }
 

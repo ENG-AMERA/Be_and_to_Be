@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class AddToCartRequest extends FormRequest
+class EditCouponRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,19 +23,20 @@ class AddToCartRequest extends FormRequest
      */
     public function rules(): array
     {
-          return [
-        'type_id' => ['required', 'exists:types,id'],
-        'amount' => ['required', 'integer', 'min:1'],
-        'price' => ['required', 'numeric', 'min:0'],
-        'extra' => ['required', 'boolean'],
-        'branch_id'=>['required', 'exists:branches,id'],
-    ];
+
+             return [
+            'coupon_id' => 'required|exists:coupons,id',
+            'min_order' => 'sometimes|numeric|min:0',
+            'value' => 'sometimes|numeric|min:1|max:100',
+            'expires_at' => 'sometimes|date|after:today',
+        ];
+
     }
 
-     protected function failedValidation(Validator $validator): void
-{
+        protected function failedValidation(Validator $validator): void
+      {
     throw new HttpResponseException(
         response()->json(['errors' => $validator->errors()], 422)
     );
-}
+           }
 }

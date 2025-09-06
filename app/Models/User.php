@@ -32,6 +32,18 @@ class User extends Authenticatable implements JWTSubject
     public function Cart(){
         return $this->hasMany(Cart::class);
     }
+        public function deliveryorder(){
+        return $this->hasMany(DeliveryOrder::class);
+    }
+
+              public function tableorder(){
+        return $this->hasMany(TableOrder::class);
+    }
+              public function selforder(){
+        return $this->hasMany(SelfOrder::class);
+    }
+
+
 
     /**
      * The attributes that should be hidden for serialization.
