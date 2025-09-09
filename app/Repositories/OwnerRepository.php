@@ -179,6 +179,13 @@ class OwnerRepository{
     return response()->json(['message' => 'type deleted successfully']);
   }
 
+  public function edit_branch_name($request){
+    $branch=Branch::where('id',$request->branch_id)->first();
+    $branch->branch_name=$request->new_name;
+    $branch->save();
+    return response()->json(['message' => 'branch edited successfully']);
+  }
+
 
 
 

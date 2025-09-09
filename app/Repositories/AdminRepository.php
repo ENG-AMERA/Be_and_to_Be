@@ -30,7 +30,7 @@ class AdminRepository{
             'value'=>$request->percent_value,
             'expires_at'=>$request->expires_date,
         ]);
-                       return response()->json([
+            return response()->json([
             'coupon added successfully'
         ]);
     }
@@ -71,6 +71,10 @@ class AdminRepository{
         return response()->json([
             'All coupons'=> $coupons,
         ]);
+    }
+
+    public function accept_order(){
+
     }
 
 }

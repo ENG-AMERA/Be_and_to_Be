@@ -7,19 +7,23 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AddMealRequest;
 use App\Repositories\OwnerRepository;
 use App\Http\Requests\AddAdminRequest;
+use App\Repositories\ClientRepository;
 use App\Http\Requests\AddBranchRequest;
+use App\Http\Requests\EditBranchNameRequest;
 use App\Http\Requests\AddMainCategoryRequest;
 
 class OwnerController extends Controller
 {
     protected $ownerrepo;
     protected $ownerservice;
+     protected $clientrepo;
 
 
-    public function __construct(OwnerRepository $ownerrepo , OneService $ownerservice  )
+    public function __construct(OwnerRepository $ownerrepo , OneService $ownerservice ,ClientRepository $clientrepo  )
     {
         $this->ownerrepo = $ownerrepo;
         $this->ownerservice=$ownerservice;
+        $this->clientrepo = $clientrepo;
     }
     public function AddAdmin(AddAdminRequest $request){
         return $this->ownerrepo->addadmin($request);
@@ -52,6 +56,24 @@ class OwnerController extends Controller
      public function deletemaincategory($maincategory_id){
         return $this->ownerrepo->deletemaincategory($maincategory_id);
     }
+
+
+    public function show_branches(){
+         return $this->clientrepo->getbranches();
+    }
+    public function show_main_categories($id){
+        return $this->clientrepo->getmaincategories($id);
+    }
+    public function show_meals($id){
+        return $this->clientrepo->getmealsofcategory($id);
+    }
+    public function show_types($id){
+        return $this->clientrepo->gettypesofmeal($id);
+    }
+    public function edit_branch_name(EditBranchNameRequest $request){
+         return $this->ownerrepo->edit_branch_name($request);
+    }
+
 
 
 }

@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\CouponRequest;
 use App\Repositories\AdminRepository;
+use App\Repositories\ClientRepository;
 use App\Http\Requests\EditCouponRequest;
 
 class AdminController extends Controller
 {
     protected $adminrepo;
+    protected $clientrepo;
 
-    public function __construct(AdminRepository $adminrepo )
+    public function __construct(AdminRepository $adminrepo , ClientRepository $clientrepo )
     {
         $this->adminrepo = $adminrepo;
+        $this->clientrepo = $clientrepo;
     }
 
     public function make_meal_unavailable($id){
@@ -37,6 +40,18 @@ class AdminController extends Controller
 
     public function show_coupons(){
         return $this->adminrepo->show_coupons();
+    }
+    public function show_branches_admin(){
+         return $this->clientrepo->getbranches();
+    }
+    public function show_main_categories_admin($id){
+        return $this->clientrepo->getmaincategories($id);
+    }
+    public function show_meals_admin($id){
+        return $this->clientrepo->getmealsofcategory($id);
+    }
+    public function show_types_admin($id){
+        return $this->clientrepo->gettypesofmeal($id);
     }
 
 
