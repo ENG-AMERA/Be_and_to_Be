@@ -18,5 +18,8 @@ class DeliveryOrderItem extends Model
     public function deliveryorder(){
         return $this->belongsTo(DeliveryOrder::class);
     }
+        public function type(){
+        return $this->belongsTo(Type::class);
+    }
 
 }

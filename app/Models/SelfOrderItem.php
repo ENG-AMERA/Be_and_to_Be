@@ -18,4 +18,7 @@ class SelfOrderItem extends Model
     public function selforder(){
         return $this->belongsTo(SelfOrder::class);
     }
+            public function type(){
+        return $this->belongsTo(Type::class);
+    }
 }

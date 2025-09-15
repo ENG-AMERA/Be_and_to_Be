@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\Accept;
 use App\Http\Requests\CouponRequest;
 use App\Repositories\AdminRepository;
 use App\Repositories\ClientRepository;
@@ -52,6 +53,24 @@ class AdminController extends Controller
     }
     public function show_types_admin($id){
         return $this->clientrepo->gettypesofmeal($id);
+    }
+
+    public function show_all_orders(){
+      return $this->adminrepo->show_all_orders();
+    }
+      public function accept_order(Accept $request){
+      return $this->adminrepo->accept_order($request);
+    }
+
+    public function show_archive_orders(){
+        return $this->adminrepo->show_archive_orders();
+    }
+    public function show_last_accepted_orders(){
+         return $this->adminrepo->show_last_accepted_orders();
+    }
+
+    public function make_coupon_unactive($id){
+          return $this->adminrepo->make_coupon_unactive($id);
     }
 
 

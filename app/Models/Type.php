@@ -23,4 +23,15 @@ class Type extends Model
     public function cartitems(){
     return $this->hasMany(CartItem::class);
     }
+        public function deliveryorderitem(){
+    return $this->hasMany(DeliveryOrderItem::class);
+    }
+
+        public function tableorderitem(){
+    return $this->hasMany(TableOrderItem::class);
+    }
+
+           public function selforderitem(){
+    return $this->hasMany(SelfOrderItem::class);
+    }
 }

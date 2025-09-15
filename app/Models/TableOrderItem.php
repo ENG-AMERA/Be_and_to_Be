@@ -18,4 +18,8 @@ class TableOrderItem extends Model
     public function tableorder(){
         return $this->belongsTo(TableOrder::class);
     }
+
+        public function type(){
+        return $this->belongsTo(Type::class);
+    }
 }

@@ -74,6 +74,10 @@ class OwnerController extends Controller
          return $this->ownerrepo->edit_branch_name($request);
     }
 
+     public function show_admins_withbranches(){
+         return $this->ownerrepo->show_admins_withbranches();
+    }
+
 
 
 }

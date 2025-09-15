@@ -36,17 +36,23 @@ Route::group([
 
 
 Route::middleware(['auth:api', 'adminrole'])->group(function () {
-   Route::post('/make_meal_unavailable/{id}', [AdminController::class, 'make_meal_unavailable']);//type id
-   Route::post('/deletecoupon/{id}', [AdminController::class, 'deletecoupon']);//coupon id
-   Route::post('/add_coupon', [AdminController::class, 'add_coupon']);
-   Route::post('/edit_expires_at', [AdminController::class, 'edit_expires_at']);
-   Route::post('/edit_value', [AdminController::class, 'edit_value']);
-   Route::post('/edit_min_order', [AdminController::class, 'edit_min_order']);
-   Route::get('/show_coupons', [AdminController::class, 'show_coupons']);
+    Route::post('/make_meal_unavailable/{id}', [AdminController::class, 'make_meal_unavailable']);//type id
+    Route::post('/deletecoupon/{id}', [AdminController::class, 'deletecoupon']);//coupon id
+    Route::post('/add_coupon', [AdminController::class, 'add_coupon']);
+    Route::post('/edit_expires_at', [AdminController::class, 'edit_expires_at']);
+    Route::post('/edit_value', [AdminController::class, 'edit_value']);
+    Route::post('/edit_min_order', [AdminController::class, 'edit_min_order']);
+    Route::get('/show_coupons', [AdminController::class, 'show_coupons']);
     Route::get('/show_branches_admin', [AdminController::class, 'show_branches_admin']);
-     Route::get('/show_main_categories_admin/{id}', [AdminController::class, 'show_main_categories_admin']);//branch id
-      Route::get('/show_meals_admin/{id}', [AdminController::class, 'show_meals_admin']);//main category id
-       Route::get('/show_types_admin/{id}', [AdminController::class, 'show_types_admin']);//meal id
+    Route::get('/show_main_categories_admin/{id}', [AdminController::class, 'show_main_categories_admin']);//branch id
+    Route::get('/show_meals_admin/{id}', [AdminController::class, 'show_meals_admin']);//main category id
+    Route::get('/show_types_admin/{id}', [AdminController::class, 'show_types_admin']);//meal id
+    Route::get('/show_all_orders', [AdminController::class, 'show_all_orders']);
+    Route::post('/accept_order', [AdminController::class, 'accept_order']);
+    Route::get('/show_archive_orders', [AdminController::class, 'show_archive_orders']);
+    Route::get('/show_last_accepted_orders', [AdminController::class, 'show_last_accepted_orders']);
+    Route::post('/make_coupon_unactive/{id}', [AdminController::class, 'make_coupon_unactive']);//coupon id
+
 });
 
 Route::middleware(['auth:api', 'ownerrole'])->group(function () {
@@ -63,6 +69,7 @@ Route::middleware(['auth:api', 'ownerrole'])->group(function () {
     Route::get('/show_meals/{id}', [OwnerController::class, 'show_meals']);//main category id
     Route::get('/show_types/{id}', [OwnerController::class, 'show_types']);//meal id
     Route::post('/edit_branch_name', [OwnerController::class, 'edit_branch_name']);
+    Route::get('/show_admins_withbranches', [OwnerController::class, 'show_admins_withbranches']);
 
 });
 
@@ -80,6 +87,6 @@ Route::middleware(['auth:api', 'clientrole'])->group(function () {
     Route::get('/show_coupons/{id}', [ClientController::class, 'show_coupons']);//branch id
     Route::post('/confirm_delivery_order', [ClientController::class, 'confirm_delivery_order']);
     Route::post('/confirm_table_order', [ClientController::class, 'confirm_table_order']);
-     Route::post('/confirm_self_order', [ClientController::class, 'confirm_self_order']);
+    Route::post('/confirm_self_order', [ClientController::class, 'confirm_self_order']);
 
 });

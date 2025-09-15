@@ -5,6 +5,9 @@ namespace App\Repositories;
 use App\Models\Type;
 use App\Models\Admin;
 use App\Models\Coupon;
+use App\Models\DeliveryOrder;
+use App\Models\SelfOrder;
+use App\Models\TableOrder;
 use Illuminate\Support\Facades\Auth;
 
 class AdminRepository{
@@ -73,8 +76,122 @@ class AdminRepository{
         ]);
     }
 
-    public function accept_order(){
+    public function show_all_orders(){
+        $user_id=Auth::id();
+        $admin=Admin::where('user_id',$user_id)->first();
+        $branch_id=$admin->branch_id;
+
+        $dateLimit =  now()->subHours(48);
+
+        $DeliveryOrder=DeliveryOrder::where('branch_id',$branch_id)
+        ->where('created_at', '>=', $dateLimit)->where('accepted',0)
+        ->with('user')
+        ->with('coupon')->with('deliveryorderitem.type.meal')->get();
+
+        $TableOrder=TableOrder::where('branch_id',$branch_id)->where('created_at', '>=', $dateLimit)
+        ->where('accepted',0)
+        ->with('user')
+        ->with('coupon')->with('tableorderitem.type.meal')->get();
+
+        $SelfOrder=SelfOrder::where('branch_id',$branch_id)->where('created_at', '>=', $dateLimit)
+        ->where('accepted',0)
+        ->with('user')
+        ->with('coupon')->with('selforderitem.type.meal')->get();
+
+
+            return response()->json([
+            'delivery_orders'=> $DeliveryOrder,
+            'table_orders'=>$TableOrder,
+            'self_orders'=>$SelfOrder,
+        ]);
+    }
+
+    public function accept_order($request){
+        if($request->type=='delivery_order'){
+            $DeliveryOrder=DeliveryOrder::where('id',$request->order_id)->first();
+            $DeliveryOrder->accepted=1;
+            $DeliveryOrder->save();
+        }
+
+           if($request->type=='table_order'){
+            $tableOrder=TableOrder::where('id',$request->order_id)->first();
+            $tableOrder->accepted=1;
+            $tableOrder->save();
+        }
+            if($request->type=='self_order'){
+            $selfOrder=SelfOrder::where('id',$request->order_id)->first();
+            $selfOrder->accepted=1;
+            $selfOrder->save();
+        }
+     return response()->json([
+            'accepted successfully'
+        ]);
+    }
+
+    public function show_archive_orders()
+    {
+         $user_id=Auth::id();
+        $admin=Admin::where('user_id',$user_id)->first();
+        $branch_id=$admin->branch_id;
+
+        $DeliveryOrder=DeliveryOrder::where('branch_id',$branch_id)->where('accepted',1)
+        ->with('user')
+        ->with('coupon')->with('deliveryorderitem.type.meal')->get();
+
+        $TableOrder=TableOrder::where('branch_id',$branch_id)->where('accepted',1)
+        ->with('user')
+        ->with('coupon')->with('tableorderitem.type.meal')->get();
+
+        $SelfOrder=SelfOrder::where('branch_id',$branch_id)->where('accepted',1)
+        ->with('user')
+        ->with('coupon')->with('selforderitem.type.meal')->get();
+
+
+            return response()->json([
+            'delivery_orders'=> $DeliveryOrder,
+            'table_orders'=>$TableOrder,
+            'self_orders'=>$SelfOrder,
+        ]);
 
     }
+
+    public function show_last_accepted_orders(){
+          $user_id=Auth::id();
+        $admin=Admin::where('user_id',$user_id)->first();
+        $branch_id=$admin->branch_id;
+
+        $dateLimit =  now()->subHours(2);
+
+        $DeliveryOrder=DeliveryOrder::where('branch_id',$branch_id)
+        ->where('updated_at', '>=', $dateLimit)->where('accepted',1)
+        ->with('user')
+        ->with('coupon')->with('deliveryorderitem.type.meal')->get();
+
+        $TableOrder=TableOrder::where('branch_id',$branch_id)->where('updated_at', '>=', $dateLimit)
+        ->where('accepted',1)
+        ->with('user')
+        ->with('coupon')->with('tableorderitem.type.meal')->get();
+
+        $SelfOrder=SelfOrder::where('branch_id',$branch_id)->where('updated_at', '>=', $dateLimit)
+        ->where('accepted',1)
+        ->with('user')
+        ->with('coupon')->with('selforderitem.type.meal')->get();
+
+
+            return response()->json([
+            'delivery_orders'=> $DeliveryOrder,
+            'table_orders'=>$TableOrder,
+            'self_orders'=>$SelfOrder,
+        ]);
+    }
+
+    public function make_coupon_unactive($id){
+        $coupon=Coupon::where('id',$id)->first();
+        $coupon->is_active=0;
+        $coupon->save();
+
+        return response()->json(['message' => 'coupon edited successfully']);
+    }
+
 
 }

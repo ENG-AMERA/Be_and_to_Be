@@ -186,6 +186,11 @@ class OwnerRepository{
     return response()->json(['message' => 'branch edited successfully']);
   }
 
+  public function show_admins_withbranches(){
+    $admin=Admin::with('user')->with('branch')->get();
+    return response()->json(['all info' =>  $admin ]);
+  }
+
 
 
 
