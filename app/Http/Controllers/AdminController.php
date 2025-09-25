@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\Accept;
+use App\Services\FcmService;
 use App\Http\Requests\CouponRequest;
 use App\Repositories\AdminRepository;
 use App\Repositories\ClientRepository;
@@ -13,11 +14,13 @@ class AdminController extends Controller
 {
     protected $adminrepo;
     protected $clientrepo;
+    protected $fcmService;
 
-    public function __construct(AdminRepository $adminrepo , ClientRepository $clientrepo )
+    public function __construct(AdminRepository $adminrepo , ClientRepository $clientrepo , FcmService $fcmService)
     {
         $this->adminrepo = $adminrepo;
         $this->clientrepo = $clientrepo;
+        $this->fcmService =$fcmService;
     }
 
     public function make_meal_unavailable($id){
@@ -59,7 +62,7 @@ class AdminController extends Controller
       return $this->adminrepo->show_all_orders();
     }
       public function accept_order(Accept $request){
-      return $this->adminrepo->accept_order($request);
+      return $this->adminrepo->accept_order($request,$this->fcmService);
     }
 
     public function show_archive_orders(){

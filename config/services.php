@@ -30,5 +30,9 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+        'fcm' => [
+        'credentialsPath'  => storage_path('be-and-to-be-firebase-adminsdk-fbsvc-5cc63d5b98.json'),
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+    ],
 
 ];

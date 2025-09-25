@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('carts', function (Blueprint $table) {
-              $table->foreignId('branch_id')->constrained('branches')->onDelete('cascade');
+        Schema::create('otps', function (Blueprint $table) {
+            $table->id();
+            $table->string('otp');
+            $table->string('phone');
+            $table->boolean(('used'));
+            $table->timestamp('expires_at');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('carts', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('otps');
     }
 };

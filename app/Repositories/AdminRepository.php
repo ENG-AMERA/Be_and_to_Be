@@ -2,12 +2,14 @@
 
 namespace App\Repositories;
 
+use App\Models\Fcm;
 use App\Models\Type;
 use App\Models\Admin;
 use App\Models\Coupon;
-use App\Models\DeliveryOrder;
 use App\Models\SelfOrder;
 use App\Models\TableOrder;
+use App\Models\DeliveryOrder;
+use App\Services\FcmService;
 use Illuminate\Support\Facades\Auth;
 
 class AdminRepository{
@@ -106,27 +108,43 @@ class AdminRepository{
         ]);
     }
 
-    public function accept_order($request){
+    public function accept_order($request,FcmService $fcmService){
+          $order = null;
+
         if($request->type=='delivery_order'){
-            $DeliveryOrder=DeliveryOrder::where('id',$request->order_id)->first();
-            $DeliveryOrder->accepted=1;
-            $DeliveryOrder->save();
+            $order=DeliveryOrder::where('id',$request->order_id)->first();
+            $order->accepted=1;
+            $order->save();
         }
 
            if($request->type=='table_order'){
-            $tableOrder=TableOrder::where('id',$request->order_id)->first();
-            $tableOrder->accepted=1;
-            $tableOrder->save();
+            $order=TableOrder::where('id',$request->order_id)->first();
+            $order->accepted=1;
+            $order->save();
         }
             if($request->type=='self_order'){
-            $selfOrder=SelfOrder::where('id',$request->order_id)->first();
-            $selfOrder->accepted=1;
-            $selfOrder->save();
+            $order=SelfOrder::where('id',$request->order_id)->first();
+            $order->accepted=1;
+            $order->save();
         }
+        //send noti
+    $userId = $order->user_id;
+
+    // جيب التوكنات المخزنة لهذا اليوزر
+    $tokens = Fcm::where('user_id', $userId)->pluck('device_token');
+
+    foreach ($tokens as $token) {
+        $fcmService->sendNotification(
+            $token,
+            'تم قبول طلبك ✅',
+            'طلبك رقم #' . $order->id . ' تم قبوله من الإدارة.'
+        );
+
      return response()->json([
             'accepted successfully'
         ]);
-    }
+    }}
+
 
     public function show_archive_orders()
     {

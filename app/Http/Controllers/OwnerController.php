@@ -78,6 +78,53 @@ class OwnerController extends Controller
          return $this->ownerrepo->show_admins_withbranches();
     }
 
+    private $apiKey = 'fkfZK52vQUaJQqhQj5h1ZZ:APA91bHka0OY6_i5TafWlG_h-k1hahb5RHUf4spQnRdBxr0setYZZMG5YEzW-T2pzwd8d96kKihurJqMn8o4YQG8eB-vN7bpJqWRjuqnTtTRhcM-dq9w6dI';
+    private $apiUrl = 'https://www.traccar.org/sms/';
+
+    public function sendOtp(string $phone): void
+    {
+        $otp = rand(10000, 99999);
+
+        Otp::create([
+            'phone' => $phone,
+            'otp' => $otp,
+            'used' => false,
+            'created_at' => now(),
+            'expires_at' => now()->addMinutes(10),
+        ]);
+
+        $message = "كود التحقق الخاص بك هو: $otp. يرجى عدم مشاركته مع أي شخص.";
+
+        $response = Http::withHeaders([
+            'Authorization' => $this->apiKey,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ])->post($this->apiUrl, [
+            'to' => $phone,
+            'message' => $message
+        ]);
+
+        Log::info('OTP sent to ' . $phone);
+        Log::info('Response: ' . $response->body());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

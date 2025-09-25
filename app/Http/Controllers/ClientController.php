@@ -75,6 +75,10 @@ class ClientController extends Controller
         return $this->clientrepo->confirm_self_order($request);
     }
 
+    public function show_cart($branch_id){
+     return $this->clientrepo->show_cart($branch_id);
+    }
+
 
 
 

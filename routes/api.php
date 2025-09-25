@@ -88,5 +88,5 @@ Route::middleware(['auth:api', 'clientrole'])->group(function () {
     Route::post('/confirm_delivery_order', [ClientController::class, 'confirm_delivery_order']);
     Route::post('/confirm_table_order', [ClientController::class, 'confirm_table_order']);
     Route::post('/confirm_self_order', [ClientController::class, 'confirm_self_order']);
-
+    Route::get('/show_cart/{id}', [ClientController::class, 'show_cart']);//branch_id
 });

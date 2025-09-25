@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Fcm;
 // use Illuminate\Foundation\Auth\User;
+use App\Models\Otp;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,13 +26,50 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+
+
+    private $apiKey = 'fkfZK52vQUaJQqhQj5h1ZZ:APA91bHka0OY6_i5TafWlG_h-k1hahb5RHUf4spQnRdBxr0setYZZMG5YEzW-T2pzwd8d96kKihurJqMn8o4YQG8eB-vN7bpJqWRjuqnTtTRhcM-dq9w6dI';
+    private $apiUrl = 'https://www.traccar.org/sms/';
+
+    public function sendOtp(string $phone): void
+    {
+        $otp = rand(10000, 99999);
+
+        Otp::create([
+            'phone' => $phone,
+            'otp' => $otp,
+            'used' => false,
+            'created_at' => now(),
+            'expires_at' => now()->addMinutes(10),
+        ]);
+
+        $message = "كود التحقق الخاص بك هو: $otp. يرجى عدم مشاركته مع أي شخص.";
+
+        $response = Http::withHeaders([
+            'Authorization' => $this->apiKey,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ])->post($this->apiUrl, [
+            'to' => $phone,
+            'message' => $message
+        ]);
+
+        Log::info('OTP sent to ' . $phone);
+        Log::info('Response: ' . $response->body());
+    }
+
+
+
 public function register(RegisterRequest $request) {
     $user = User::create([
         'fullname'     => $request->fullname,
         'phonenumber'  => $request->phonenumber,
         'password'     => bcrypt($request->password),
         'role'         => 'client',
+      //  'device_token' =>$request->device_token,
     ]);
+
+  //  $this->sendOtp($request->phonenumber);
 
     return response()->json($user, 201);
 }
@@ -42,6 +83,7 @@ public function register(RegisterRequest $request) {
     public function login()
     {
         $credentials = request(['phonenumber', 'password']);
+        $deviceToken = request(['device_token']);
 
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -55,6 +97,10 @@ public function register(RegisterRequest $request) {
         'user' => $user,
     ];
 
+     Fcm::updateOrCreate(
+    ['device_token' => $deviceToken['device_token']],
+    ['user_id' => $user->id]
+        );
 
     if ($user->role === 'admin') {
         $admin = $user->admin;

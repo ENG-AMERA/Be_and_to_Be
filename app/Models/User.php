@@ -23,6 +23,7 @@ class User extends Authenticatable implements JWTSubject
         'phonenumber',
         'password',
         'role',
+
     ];
 
     public function admin(){
@@ -41,6 +42,10 @@ class User extends Authenticatable implements JWTSubject
     }
               public function selforder(){
         return $this->hasMany(SelfOrder::class);
+    }
+
+        public function fcm(){
+        return $this->hasMany(Fcm::class);
     }
 
 

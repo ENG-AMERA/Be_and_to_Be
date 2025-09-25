@@ -31,6 +31,7 @@ class RegisterRequest extends FormRequest
     'unique:users,phonenumber',
 ],
             'password' => 'required|string|min:8',
+
         ];
     }
 

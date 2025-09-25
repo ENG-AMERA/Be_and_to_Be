@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('carts', function (Blueprint $table) {
-              $table->foreignId('branch_id')->constrained('branches')->onDelete('cascade');
+        Schema::create('fcms', function (Blueprint $table) {
+            $table->id();
+            $table->string('device_token');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('carts', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('fcms');
     }
 };
