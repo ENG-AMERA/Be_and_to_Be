@@ -37,6 +37,7 @@ Route::group([
 
 Route::middleware(['auth:api', 'adminrole'])->group(function () {
     Route::post('/make_meal_unavailable/{id}', [AdminController::class, 'make_meal_unavailable']);//type id
+    Route::post('/make_meal_available/{id}', [AdminController::class, 'make_meal_available']);//type id
     Route::post('/deletecoupon/{id}', [AdminController::class, 'deletecoupon']);//coupon id
     Route::post('/add_coupon', [AdminController::class, 'add_coupon']);
     Route::post('/edit_expires_at', [AdminController::class, 'edit_expires_at']);

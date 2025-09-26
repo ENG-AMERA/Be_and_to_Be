@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\FcmService;
 use Illuminate\Http\Request;
 use App\Repositories\ClientRepository;
 use App\Http\Requests\AddToCartRequest;
@@ -16,10 +17,12 @@ use App\Http\Requests\ConfirmDeliveryOrderRequest;
 class ClientController extends Controller
 {
     protected $clientrepo;
+    protected $fcmService;
 
-    public function __construct(ClientRepository $clientrepo )
+    public function __construct(ClientRepository $clientrepo , FcmService $fcmService )
     {
         $this->clientrepo = $clientrepo;
+         $this->fcmService =$fcmService;
     }
 
     public function getbranches(){
@@ -63,16 +66,16 @@ class ClientController extends Controller
 
         public function confirm_delivery_order(ConfirmDeliveryOrderRequest $request)
         {
-        return $this->clientrepo->confirm_delivery_order($request);
+        return $this->clientrepo->confirm_delivery_order($request,$this->fcmService);
     }
 
         public function confirm_table_order(ConfirmTableOrderRequest $request)
         {
-        return $this->clientrepo->confirm_table_order($request);
+        return $this->clientrepo->confirm_table_order($request,$this->fcmService);
     }
         public function confirm_self_order(ConfirmSelfOrderRequest $request)
         {
-        return $this->clientrepo->confirm_self_order($request);
+        return $this->clientrepo->confirm_self_order($request,$this->fcmService);
     }
 
     public function show_cart($branch_id){

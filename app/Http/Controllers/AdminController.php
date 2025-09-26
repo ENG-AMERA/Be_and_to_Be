@@ -26,6 +26,11 @@ class AdminController extends Controller
     public function make_meal_unavailable($id){
       return $this->adminrepo->make_meal_unavailable($id);
     }
+
+       public function make_meal_available($id){
+      return $this->adminrepo->make_meal_available($id);
+    }
+
     public function add_coupon(CouponRequest $request){
         return $this->adminrepo->addcoupon($request);
     }

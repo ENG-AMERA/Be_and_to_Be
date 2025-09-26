@@ -24,6 +24,17 @@ class AdminRepository{
         ]);
     }
 
+        public function make_meal_available($id)
+    {
+        $type=Type::where('id',$id)->first();
+        $type->available=1;
+        $type->save();
+           return response()->json([
+            'status updated successfully'
+        ]);
+    }
+
+
     public function addcoupon($request){
         $user_id=Auth::id();
         $admin=Admin::where('user_id',$user_id)->first();
@@ -108,7 +119,7 @@ class AdminRepository{
         ]);
     }
 
-    public function accept_order($request,FcmService $fcmService){
+    public function accept_order($request, $fcmService){
           $order = null;
 
         if($request->type=='delivery_order'){
@@ -137,13 +148,19 @@ class AdminRepository{
         $fcmService->sendNotification(
             $token,
             'تم قبول طلبك ✅',
-            'طلبك رقم #' . $order->id . ' تم قبوله من الإدارة.'
+            ' تم قبول طلبك وسيتم تحضيره بأسرع وقت ممكن '
         );
 
-     return response()->json([
+
+    }
+
+        return response()->json([
             'accepted successfully'
+
         ]);
-    }}
+
+
+}
 
 
     public function show_archive_orders()

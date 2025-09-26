@@ -325,7 +325,7 @@ if($product->available==0)
         $fcmService->sendNotification(
             $token,
             '📦 طلب جديد',
-            'إجاك طلب جديد رقم #' . $delivery_order->id . ' بفرع ' . $delivery_order->branch_id
+            'تم استقبال طلب جديد' . ' بفرع ' . $delivery_order->branch_id
         );
     }
 
@@ -386,17 +386,16 @@ if($product->available==0)
         $original_price=$cart->total_price;
         $cart->delete();
 
-                    // 🟢 إرسال إشعار للأدمن
+        // 🟢 إرسال إشعار للأدمن
     $admins=Admin::where('branch_id',$table_order->branch_id)->pluck('user_id');
    // $admins = User::where('role', 'admin')->pluck('id'); // إذا عندك كولوم role
-    $tokens = Fcm::whereIn('user
-    _id', $admins)->pluck('device_token');
+    $tokens = Fcm::whereIn('user_id', $admins)->pluck('device_token');
 
     foreach ($tokens as $token) {
         $fcmService->sendNotification(
             $token,
             '📦 طلب جديد',
-            'إجاك طلب جديد رقم #' . $table_order->id . ' بفرع ' . $table_order->branch_id
+            'تم استقبال طلب جديد ' . ' بفرع ' . $table_order->branch_id
         );
     }
 
@@ -411,7 +410,7 @@ if($product->available==0)
     }
 
 
-     public function confirm_self_order($request){
+     public function confirm_self_order($request ,  $fcmService){
         $cart=Cart::where('id',$request->cart_id)->first();
         $cart_item=$cart->cartitems;
         $finalPrice=0;
@@ -456,6 +455,19 @@ if($product->available==0)
         }
         $original_price=$cart->total_price;
         $cart->delete();
+
+               // 🟢 إرسال إشعار للأدمن
+    $admins=Admin::where('branch_id',$self_order->branch_id)->pluck('user_id');
+   // $admins = User::where('role', 'admin')->pluck('id'); // إذا عندك كولوم role
+    $tokens = Fcm::whereIn('user_id', $admins)->pluck('device_token');
+
+    foreach ($tokens as $token) {
+        $fcmService->sendNotification(
+            $token,
+            '📦 طلب جديد',
+            'تم استقبال طلب جديد'  . ' بفرع ' . $self_order->branch_id
+        );
+    }
 
             return response()->json([
              'original_price' => $original_price,
